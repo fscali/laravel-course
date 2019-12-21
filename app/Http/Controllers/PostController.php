@@ -6,6 +6,7 @@ use App\BlogPost;
 use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 
 // use Illuminate\Support\Facades\DB;
 
@@ -46,13 +47,26 @@ class PostController extends Controller
 
         // comments_count
 
+        $mostCommented  = Cache::remember('blog-post-commented', 60, function () {
+            return  BlogPost::mostCommented()->take(5)->get();
+        });
+
+        $mostActive  = Cache::remember('users-most-active', 60, function () {
+            return  User::withMostBlogPosts()->take(5)->get();
+        });
+
+        $mostActiveLastMonth  = Cache::remember('users-most-active-last-month', 60, function () {
+            return  User::withMostBlogPostsLastMonth()->take(5)->get();
+        });
+
         return view(
             'posts.index',
             [
-                'posts' => BlogPost::latest()->withCount('comments')->get(),
-                'mostCommented' => BlogPost::mostCommented()->take(5)->get(),
-                'mostActive' => User::withMostBlogPosts()->take(5)->get(),
-                'mostActiveLastMonth' => User::withMostBlogPostsLastMonth()->take(5)->get(),
+                'posts' => BlogPost::latest()->withCount('comments')->with('user')->get(),
+                // 'mostCommented' => BlogPost::mostCommented()->take(5)->get(),
+                'mostCommented' => $mostCommented,
+                'mostActive' => $mostActive,
+                'mostActiveLastMonth' => $mostActiveLastMonth
             ]
         );
     }
@@ -71,8 +85,11 @@ class PostController extends Controller
         //         return $query->latest();
         //     }])->findOrFail($id),
         // ]);
+        $blogPost = Cache::remember("blog-post-{$id}", 60, function () use ($id) {
+            return BlogPost::with('comments')->findOrFail($id);
+        });
         return view('posts.show', [
-            'post' => BlogPost::with('comments')->findOrFail($id),
+            'post' => $blogPost,
         ]);
     }
 
@@ -103,6 +120,7 @@ class PostController extends Controller
     public function update(StorePost $request, $id)
     {
         $post = BlogPost::findOrFail($id);
+
 
         // if (Gate::denies('update-post', $post)) {
         //     abort(403, "You can't edit this blog post!");
