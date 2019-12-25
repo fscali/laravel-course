@@ -42,6 +42,17 @@ class BlogPost extends Model
         return $query->withCount('comments')->orderBy('comments_count', 'desc');
     }
 
+    public function scopeLatestWithRelations(Builder $query)
+    {
+        // comments_count
+        return $query->latest()
+            ->withCount('comments')
+            ->with('user')
+            ->with('tags');
+    }
+
+
+
     public static function boot()
     {
         static::addGlobalScope(new DeletedAdminScope);
@@ -49,6 +60,7 @@ class BlogPost extends Model
 
         static::deleting(function (BlogPost $blogPost) {
             $blogPost->comments()->delete();
+            Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });
 
         static::restoring(function (BlogPost $blogPost) {
@@ -56,7 +68,7 @@ class BlogPost extends Model
         });
 
         static::updating(function (BlogPost $blogPost) {
-            Cache::forget("blog-post-{$blogPost->id}");
+            Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });
     }
 }

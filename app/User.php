@@ -33,6 +33,11 @@ class User extends Authenticatable
         return $this->hasMany('App\BlogPost');
     }
 
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
     public function scopeWithMostBlogPosts(Builder $query)
     {
         return $query->withCount('blogPosts')->orderBy('blog_posts_count', 'desc');
@@ -43,6 +48,6 @@ class User extends Authenticatable
         return $query->withCount(['blogPosts' => function (Builder $query) {
             $query->whereBetween(static::CREATED_AT, [now()->subMonths(1), now()]);
         }])->has('blogPosts', '>=', 2)
-           ->orderBy('blog_posts_count', 'desc');
+            ->orderBy('blog_posts_count', 'desc');
     }
 }

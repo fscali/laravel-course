@@ -19,12 +19,13 @@
                 <p>Currently read by {{ $counter }} people</p>
 
                 <h4>Comments</h4>
+                @include('comments._form')
 
                 @forelse($post->comments as $comment)
                 <p>
                     {{ $comment->content }}
                 </p>
-                @updated(['date' => $comment->created_at])
+                @updated(['date' => $comment->created_at, 'name' => $comment->user->name])
                 @endupdated
                 @empty
                 <p>No comments yet!</p>
