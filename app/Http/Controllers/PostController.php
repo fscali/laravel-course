@@ -156,14 +156,16 @@ class PostController extends Controller
             dump($file->getClientMimeType());
             dump($file->getClientOriginalExtension());
 
+
             // $fileName = $file->store('thumbnails'); // shortcut for using the storage facade
             //  dump($fileName);  //unique random name, for example: thumbnails/TiLQueks6Gigr7oIRybaLgMd2nhwVemyesIv52Zn.pdf
-            Storage::disk('public')->put('thumbnails', $file);
+            // Storage::disk('public')->put('thumbnails', $file);
 
-            // $file->storeAs('thumbnails', $blogPost->id . $file->guessExtension());
-            Storage::putFileAs('thumbnails', $file, $blogPost->id . "." . $file->guessExtension());
+
+            $name1 =  $file->storeAs('thumbnails', $blogPost->id . "." . $file->guessExtension());
+            dump(Storage::url($name1));
         };
-        //die;
+        die;
 
 
         $request->session()->flash('status', 'Blog post was created!');
