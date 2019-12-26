@@ -7,6 +7,7 @@ use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 // use Illuminate\Support\Facades\DB;
 
@@ -146,6 +147,25 @@ class PostController extends Controller
         $validatedData = $request->validated();
         $validatedData['user_id'] = $request->user()->id;
         $blogPost = BlogPost::create($validatedData);
+
+        // dump($request->hasFile('thumbnail'));
+        $hasFile = $request->hasFile('thumbnail');
+        if ($hasFile) {
+            $file = $request->file('thumbnail');
+            dump($file);
+            dump($file->getClientMimeType());
+            dump($file->getClientOriginalExtension());
+
+            // $fileName = $file->store('thumbnails'); // shortcut for using the storage facade
+            //  dump($fileName);  //unique random name, for example: thumbnails/TiLQueks6Gigr7oIRybaLgMd2nhwVemyesIv52Zn.pdf
+            Storage::disk('public')->put('thumbnails', $file);
+
+            // $file->storeAs('thumbnails', $blogPost->id . $file->guessExtension());
+            Storage::putFileAs('thumbnails', $file, $blogPost->id . "." . $file->guessExtension());
+        };
+        //die;
+
+
         $request->session()->flash('status', 'Blog post was created!');
 
         return redirect()->route('posts.show', ['post' => $blogPost->id]);
