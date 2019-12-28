@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BlogPost;
 use App\Http\Requests\StorePost;
+use App\Image;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Cache;
@@ -151,10 +152,13 @@ class PostController extends Controller
         // dump($request->hasFile('thumbnail'));
         $hasFile = $request->hasFile('thumbnail');
         if ($hasFile) {
-            $file = $request->file('thumbnail');
-            dump($file);
-            dump($file->getClientMimeType());
-            dump($file->getClientOriginalExtension());
+            $path = $request->file('thumbnail')->store('thumbnails');
+            $blogPost->image()->save(
+                Image::create(['path' => $path])
+            );
+            // dump($file);
+            // dump($file->getClientMimeType());
+            // dump($file->getClientOriginalExtension());
 
 
             // $fileName = $file->store('thumbnails'); // shortcut for using the storage facade
@@ -162,10 +166,10 @@ class PostController extends Controller
             // Storage::disk('public')->put('thumbnails', $file);
 
 
-            $name1 =  $file->storeAs('thumbnails', $blogPost->id . "." . $file->guessExtension());
-            dump(Storage::url($name1));
+            // $name1 =  $file->storeAs('thumbnails', $blogPost->id . "." . $file->guessExtension());
+            // dump(Storage::url($name1));
         };
-        die;
+        // die;
 
 
         $request->session()->flash('status', 'Blog post was created!');
@@ -192,6 +196,20 @@ class PostController extends Controller
         $this->authorize($post);
 
         $validatedData = $request->validated();
+        $hasFile = $request->hasFile('thumbnail');
+        if ($hasFile) {
+            $path = $request->file('thumbnail')->store('thumbnails');
+
+            if ($post->image) {
+                Storage::delete($post->image->path);
+                $post->image->path = $path;
+                $post->image->save();
+            } else {
+                $post->image()->save(
+                    Image::create(['path' => $path])
+                );
+            }
+        }
 
         $post->fill($validatedData);
         $post->save();
