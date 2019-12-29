@@ -154,7 +154,9 @@ class PostController extends Controller
         if ($hasFile) {
             $path = $request->file('thumbnail')->store('thumbnails');
             $blogPost->image()->save(
-                Image::create(['path' => $path])
+                //Image::create(['path' => $path])
+                Image::make(['path' => $path]) //so the polymorphic attributes are handled automatically by laravel
+
             );
             // dump($file);
             // dump($file->getClientMimeType());
@@ -205,8 +207,10 @@ class PostController extends Controller
                 $post->image->path = $path;
                 $post->image->save();
             } else {
+
                 $post->image()->save(
-                    Image::create(['path' => $path])
+                    // Image::create(['path' => $path])
+                    Image::make(['path' => $path])
                 );
             }
         }

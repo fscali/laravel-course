@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\ViewComposers\ActivityComposer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191); //not to run in problems with key length (see polimorph images table)
         Blade::component('components.badge', 'badge');
         Blade::component('components.updated', 'updated');
         Blade::component('components.card', 'card');

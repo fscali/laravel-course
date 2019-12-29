@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Storage;
 class Image extends Model
 {
     //
-    protected $fillable = ['path', 'blog_post_id'];
+    protected $fillable = ['path'/*, 'blog_post_id'*/];
 
-    public function blogPosts()
+    public function imageable/*blogPosts*/()
     {
-        return $this->belongsTo(('App\BlogPost'));
+        return $this->morphTo(); //$this->belongsTo(('App\BlogPost')); 
     }
 
     public function url()

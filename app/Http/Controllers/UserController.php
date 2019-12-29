@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
-        $this->authorizeResource(User::class, 'user'); //it will use the user policy, matching the name of the actions
+        $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -53,8 +52,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
-        dd($user);
+        return view('users.show', ['user' => $user]);
     }
 
     /**
@@ -65,8 +63,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
-        dd($user);
+        return view('users.edit', ['user' => $user]);
     }
 
     /**
@@ -78,7 +75,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
         dd($user);
     }
 
