@@ -9,7 +9,7 @@
 
     <div class="row">
         <div class="col-4">
-            <img src="" class="img-thumbnail avatar" />
+            <img src="{{ $user->image ? $user->image->url() : '' }}" class="img-thumbnail avatar" />
 
             <div class="card mt-4">
                 <div class="card-body">
@@ -27,6 +27,8 @@
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Save Changes" />
             </div>
+
+            @errors @enderrors
         </div>
     </div>
 
