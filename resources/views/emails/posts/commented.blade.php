@@ -17,6 +17,8 @@
 <hr />
 
 <p>
+    <!-- it doesn't work cause docker container doesn't see laravel.test.. -->
+    {{-- <img src="{{ $message->embed($comment->user->image->url()) }}" alt=""> --}}
     <a href="{{ route('users.show', ['user' => $comment->user->id]) }}">
         {{ $comment->user->name }}
     </a> said:
