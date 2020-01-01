@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Http\Requests\StoreComment;
 use App\Mail\CommentPosted;
+use App\Mail\CommentPostedMarkdown;
 use Illuminate\Support\Facades\Mail;
 
 class PostCommentController extends Controller
@@ -25,7 +26,7 @@ class PostCommentController extends Controller
 
         //note: better doing it in events, see later lecture
         //note: laravel recognizes automatically the email from the user
-        Mail::to($post->user)->send(new CommentPosted($comment));
+        Mail::to($post->user)->send(new CommentPostedMarkdown($comment));
 
         // $request->session()->flash('status', 'Comment  was created!');
         return redirect()->back()->withStatus('Comment was created!');
