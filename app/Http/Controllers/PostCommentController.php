@@ -26,7 +26,14 @@ class PostCommentController extends Controller
 
         //note: better doing it in events, see later lecture
         //note: laravel recognizes automatically the email from the user
-        Mail::to($post->user)->send(new CommentPostedMarkdown($comment));
+        // Mail::to($post->user)->send(new CommentPostedMarkdown($comment));
+
+
+        //$when = now()->addMinutes(1);
+        Mail::to($post->user)->queue(new CommentPostedMarkdown($comment));
+
+        //Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
+
 
         // $request->session()->flash('status', 'Comment  was created!');
         return redirect()->back()->withStatus('Comment was created!');

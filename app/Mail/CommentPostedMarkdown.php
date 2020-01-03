@@ -8,7 +8,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CommentPostedMarkdown extends Mailable
+// class CommentPostedMarkdown extends Mailable implements ShouldQueue //Only implementing this interface, Laravel it's smart enough to process email in the background!
+class CommentPostedMarkdown extends Mailable implements ShouldQueue
+
 {
     use Queueable, SerializesModels;
 
@@ -31,6 +33,7 @@ class CommentPostedMarkdown extends Mailable
      */
     public function build()
     {
+
         $subject = "Comment was posted on your {$this->comment->commentable->title} blog post";
 
         return $this->subject($subject)
