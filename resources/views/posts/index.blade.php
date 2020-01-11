@@ -21,37 +21,40 @@
 
             @tags(['tags' => $post->tags])@endtags
 
-            @if($post->comments_count)
-            <p>{{ $post->comments_count }} comments</p>
-            @else
-            <p>No comments yet!</p>
-            @endif
-            @auth
+            {{-- @if($post->comments_count)
+            <p>{{ $post->comments_count }} comments
+        </p>
+        @else
+        <p>No comments yet!</p>
+        @endif --}}
 
-            @can('update', $post)
-            <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary">
-                Edit
-            </a>
-            @endcan
-            @endauth
+        {{ trans_choice('messages.comments', $post->comments_count) }}
+        @auth
+
+        @can('update', $post)
+        <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary">
+            Edit
+        </a>
+        @endcan
+        @endauth
 
 
-            {{-- @cannot('delete', $post)
+        {{-- @cannot('delete', $post)
                 <p>You can't delete this post</p>
             @endcannot --}}
-            @auth
+        @auth
 
-            @if(!$post->trashed())
-            @can('delete', $post)
-            <form method="POST" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}">
-                @csrf
-                @method('DELETE')
+        @if(!$post->trashed())
+        @can('delete', $post)
+        <form method="POST" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}">
+            @csrf
+            @method('DELETE')
 
-                <input type="submit" value="Delete!" class="btn btn-primary" />
-            </form>
-            @endcan
-            @endif
-            @endauth
+            <input type="submit" value="Delete!" class="btn btn-primary" />
+        </form>
+        @endcan
+        @endif
+        @endauth
 
         </p>
         @empty

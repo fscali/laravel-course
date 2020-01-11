@@ -19,6 +19,15 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+
+
+    public const LOCALES = [
+        'en' => 'English',
+        'es' => 'Espanol',
+        'de' => 'Deutsch'
+    ];
+
+  
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -71,7 +80,8 @@ class User extends Authenticatable
         });
     }
 
-    public function scopeThatIsAnAdmin(Builder $query) {
+    public function scopeThatIsAnAdmin(Builder $query)
+    {
         return $query->where('is_admin', true);
     }
 }

@@ -25,6 +25,17 @@
             </div>
 
             <div class="form-group">
+                <label>{{ __('Language:') }}</label>
+                <select name="locale" class="form-control">
+                    @foreach (App\User::LOCALES as $locale => $label)
+                    <option value="{{ $locale }}" {{ $user->locale != $locale ?: 'selected' }}>
+
+                        {{ $label }}
+
+                    </option>
+
+                    @endforeach</select> </div>
+            <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Save Changes" />
             </div>
 
