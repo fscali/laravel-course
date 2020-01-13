@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\CounterContract;
 use App\Http\Requests\UpdateUser;
 use App\Image;
-use App\Services\Counter;
 use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
 
-
     private $counter;
 
-    public function __construct(Counter $counter)
+    public function __construct(CounterContract $counter)
     {
         $this->middleware('auth');
         $this->authorizeResource(User::class, 'user');
@@ -66,7 +65,7 @@ class UserController extends Controller
         return view('users.show', [
             'user' => $user,
             // 'counter' => $counter->increment("user-{$user->id}")
-            'counter' => $this->counter->increment("user-{$user->id}")
+            'counter' => $this->counter->increment("user-{$user->id}"),
 
         ]);
     }
@@ -105,11 +104,8 @@ class UserController extends Controller
             }
         }
 
-
-
         $user->locale = $request->get('locale');
         $user->save();
-
 
         return redirect()
             ->back()

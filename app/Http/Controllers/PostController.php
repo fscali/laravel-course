@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
+use App\Contracts\CounterContract;
 use App\Events\BlogPostPosted;
 use App\Http\Requests\StorePost;
 use App\Image;
-use App\Services\Counter;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Cache;
@@ -28,8 +28,8 @@ class PostController extends Controller
 
 
     /*Counter is automatically injected by Laravel because of the definition in AppServiceProvider */
-   
-    public function __construct(Counter $counter)
+
+    public function __construct(CounterContract $counter)
     {
         $this->middleware('auth')
             ->only(['create', 'store', 'edit', 'update', 'destroy']);
