@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Events\CommentPosted as EventsCommentPosted;
 use App\Http\Requests\StoreComment;
+use App\Http\Resources\Comment as CommentResource;
 // use App\Jobs\NotifyUsersPostWasCommented;
 // use App\Jobs\ThrottledMail;
 // use App\Mail\CommentPosted;
@@ -22,7 +23,8 @@ class PostCommentController extends Controller
 
     public function index(BlogPost $post)
     {
-        return $post->comments()->with('user')->get();
+        return CommentResource::collection($post->comments()->with('user')->get());
+        // return $post->comments()->with('user')->get();
     }
     //binding: it will call findOrFail automatically for the post
     public function store(BlogPost $post, StoreComment $request)
