@@ -13,6 +13,8 @@ use App\Services\DummyCounter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
+use App\Http\Resources\Comment as CommentResource;
+use Illuminate\Http\Resources\Json\Resource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -56,6 +58,11 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\CounterContract',
             Counter::class
         );
+
+        //it doesn't wrap it anymore in a "data" object
+        // CommentResource::withoutWrapping();
+
+        Resource::withoutWrapping();
 
         // $this->app->when(Counter::class)
         // ->needs('$timeout')

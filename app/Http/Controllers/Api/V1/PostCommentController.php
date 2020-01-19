@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\BlogPost;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Comment as CommentResource;
+
 
 class PostCommentController extends Controller
 {
@@ -12,9 +15,21 @@ class PostCommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(BlogPost $post, Request $request)
     {
-        return response()->json(['comments' => []]);
+
+        $perPage = $request->input('per_page') ?? 15;
+        $comments =  CommentResource::collection(
+            // $post->comments()->with('user')->get()
+            $post->comments()->with('user')->paginate($perPage)->appends(
+                [
+                    'per_page' => $perPage //parameters added to the generated pagination links
+                ]
+            )
+        );
+
+        return $comments;
+        // return response()->json($comments);
     }
 
     /**
